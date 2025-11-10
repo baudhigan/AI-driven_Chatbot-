@@ -2,9 +2,6 @@
 
 A prototype chatbot for a large public sector organization that answers HR, IT, events, and other internal queries. This repo contains a minimal, hackathon-ready skeleton to demonstrate retrieval-augmented generation, document processing (OCR + layout parsing + summarization), email 2FA, and a lightweight API. Drop it into GitHub, fork it, run it locally, and flex on the judges.
 
-## TL;DR
-
-Spin up the Docker Compose stack, open the frontend, upload a sample HR or IT PDF, then ask the chatbot questions. The system will index the document, create embeddings, and answer grounded queries with source citations. Email-based 2FA is included for demo authentication.
 
 ## Features
 
@@ -23,7 +20,7 @@ Document upload -> OCR -> chunk -> embeddings -> vector DB
 
 Auth: Email OTP stored temporarily in Redis -> JWT session
 
-## Repo layout
+## Layout
 
 ```
 publicsector-chatbot/
@@ -44,87 +41,6 @@ publicsector-chatbot/
   tests/
     locustfile.py
   LICENSE
-```
-
-## Quickstart (requirements)
-
-* Docker and Docker Compose (version 1.29+)
-* Python 3.10+ (only if running services locally without Docker)
-* An SMTP account for OTP email or local SMTP dev server
-
-## Environment variables
-
-Set these before running or place them in a .env file consumed by docker-compose
-
-```
-SMTP_HOST=smtp.example.com
-SMTP_PORT=587
-SMTP_USER=you@example.com
-SMTP_PASS=securepassword
-JWT_SECRET=replace_with_a_strong_secret
-REDIS_HOST=redis
-FAISS_INDEX_PATH=/data/faiss.index
-S3_ENDPOINT=http://minio:9000
-S3_ACCESS_KEY=minio
-S3_SECRET_KEY=minio123
-```
-
-## Docker Compose (local demo)
-
-```
-version: '3.8'
-services:
-  backend:
-    build: ./backend
-    ports:
-      - 8000:8000
-    environment:
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
-      - SMTP_USER=${SMTP_USER}
-      - SMTP_PASS=${SMTP_PASS}
-      - JWT_SECRET=${JWT_SECRET}
-      - REDIS_HOST=redis
-    depends_on:
-      - redis
-      - faiss
-    command: uvicorn app:app --host 0.0.0.0 --port 8000
-  redis:
-    image: redis:6-alpine
-    ports:
-      - 6379:6379
-  faiss:
-    image: ghcr.io/some/faiss-demo:latest
-    volumes:
-      - faiss_data:/data
-  minio:
-    image: minio/minio
-    command: server /data
-    environment:
-      - MINIO_ROOT_USER=minio
-      - MINIO_ROOT_PASSWORD=minio123
-    ports:
-      - 9000:9000
-volumes:
-  faiss_data:
-```
-
-## Backend endpoints (examples)
-
-```
-POST /auth/request-otp
-body { "email": "user@example.com" }
-
-POST /auth/verify
-body { "email": "user@example.com", "otp": "123456" }
-
-POST /docs/upload
-headers Authorization: Bearer <token>
-form file=@hr_policy_sample.pdf
-
-POST /chat/query
-headers Authorization: Bearer <token>
-body { "query": "How many casual leaves am I allowed?" }
 ```
 
 
