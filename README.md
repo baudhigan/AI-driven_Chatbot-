@@ -329,7 +329,9 @@ class QuickUser(HttpUser):
         self.client.post('/docs/upload', files=files)
 ```
 
----
+## Sample Output
+<img width="1024" height="1536" alt="324645" src="https://github.com/user-attachments/assets/868f39a8-4e3f-4431-b96e-5e4c113e6a3b" />
+
 
 
 
