@@ -331,6 +331,5 @@ class QuickUser(HttpUser):
 
 ---
 
-If you want, I will now produce a single downloadable ZIP of these files or paste the raw files individually so you can copy them into your GitHub repo. Tell me which you prefer.
 
 
